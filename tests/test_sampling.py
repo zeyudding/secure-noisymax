@@ -1,5 +1,6 @@
-from sampling import *
+from noisymax.primitive import *
 from matplotlib import pyplot as plt
+import numpy as np
 import time
 
 # x = []
@@ -9,14 +10,27 @@ import time
 # plt.hist(x, bins=100)
 # plt.show()
 
-start = time.time()
-for _ in range(1000):
-    z = geometric_exp(Fraction(100,1))
-end = time.time()
-print('fast takes {}'.format(end-start))
+num_iter = 1000
+eps = Fraction(1,1)
+k = 3
+p = eps/(2*k)
+
+
 
 start = time.time()
-for _ in range(1000):
-    z = geometric_exp1(Fraction(100,1))
+for _ in range(num_iter):
+    z = np.random.exponential(p)
 end = time.time()
-print('slow takes {}'.format(end-start))
+print(f'exp noise takes {end-start}')
+
+start = time.time()
+for _ in range(num_iter):
+    z = geometric_exp(p)
+end = time.time()
+print(f'fast takes {end-start}')
+
+start = time.time()
+for _ in range(num_iter):
+    z = geometric_exp1(p)
+end = time.time()
+print(f'slow takes {end-start}')
