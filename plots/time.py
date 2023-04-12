@@ -73,7 +73,7 @@ def main():
                 data = json.load(fp)
         else:
             logger.info('No json file exists, running experiments...')
-            ks = [25, 50, 100, 200]
+            ks = [25, 50, 100, 200, 400, 800]
             eps=Fraction(1,1)
             num_iter = 100
             data = {}
@@ -86,7 +86,7 @@ def main():
                 #     total_iterations=int(results.n_iterations)
                 # )
                 print(dataset_name)
-                print(dataset_queries)
+                # print(dataset_queries)
                 data[dataset_name] = []
                 for k in ks:
                     start = time.time()

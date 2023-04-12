@@ -1,11 +1,34 @@
-from noisymax.primitive import *
-from noisymax.algorithm import noisy_top_k, noisy_top_k_secure, noisy_top_k_secure_fast
-from matplotlib import pyplot as plt
+import cProfile, pstats, io
+from pstats import SortKey
+import argparse
+import os
+import subprocess
+import difflib
+import logging
+import json
+import numpy as np
+import matplotlib
+import shutil
+import re
+import coloredlogs
 import time
 from fractions import Fraction
 
+def main():
+    data_folder = os.path.join(os.path.curdir, 'output')
+    json_file = os.path.join(data_folder, 'prof/kosarak.json')
+    if os.path.exists(json_file):
+        with open(json_file, 'r') as fp:
+            data = json.load(fp)
+            s1 = float(data['s1'].split()[7])
+            s2 = float(data['s2'].split()[4])
+            s3 = float(data['s3'].split()[4])
+            print(s1, s2, s3)
+            print(data['s1'])
+
 
 if __name__ == '__main__':
+    main()
     #
     # t = test_noisy_top_k_secure()
     #
@@ -29,16 +52,16 @@ if __name__ == '__main__':
 
     # plt.show()
     
-    ns = list(range(100, 1000, 100))
-    t0 = time_noisy_top_k()
-    t1 = time_noisy_top_k_secure()
-    t2 = time_noisy_top_k_secure_fast()
-    ratio1 = np.divide(t1, t0)
-    ratio2 = np.divide(t2, t0)
-    plt.plot(ns, ratio1, label="noisy_top_k_secure vs noisy_top_k")
-    plt.plot(ns, ratio2, label="noisy_top_k_secure_fast vs noisy_top_k")
-    plt.legend(loc="lower right")
-    plt.show()
+    # ns = list(range(100, 1000, 100))
+    # t0 = time_noisy_top_k()
+    # t1 = time_noisy_top_k_secure()
+    # t2 = time_noisy_top_k_secure_fast()
+    # ratio1 = np.divide(t1, t0)
+    # ratio2 = np.divide(t2, t0)
+    # plt.plot(ns, ratio1, label="noisy_top_k_secure vs noisy_top_k")
+    # plt.plot(ns, ratio2, label="noisy_top_k_secure_fast vs noisy_top_k")
+    # plt.legend(loc="lower right")
+    # plt.show()
 
     # k = 5
     # eps = Fraction(1,1)
