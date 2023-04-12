@@ -16,7 +16,7 @@ from fractions import Fraction
 
 def main():
     data_folder = os.path.join(os.path.curdir, 'output')
-    json_file = os.path.join(data_folder, 'prof/kosarak.json')
+    json_file = os.path.join(data_folder, 'prof/kosarak.cprof.json')
     if os.path.exists(json_file):
         with open(json_file, 'r') as fp:
             data = json.load(fp)
@@ -79,4 +79,3 @@ if __name__ == '__main__':
     # plt.plot(ms, running_time, label="m (precision scaling factor)")
     # plt.legend(loc="lower right")
     # plt.show()
-    pass

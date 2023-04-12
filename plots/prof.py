@@ -7,13 +7,10 @@ import difflib
 import logging
 import json
 import numpy as np
-import matplotlib
 import shutil
 import re
-import coloredlogs
 import time
 from fractions import Fraction
-import numpy as np
 from noisymax.primitive import geometric_exp
 
 
@@ -159,7 +156,7 @@ def main():
     
     for dataset in process_datasets(results.datasets):
         dataset_name, dataset_queries = dataset
-        json_file = os.path.join(data_folder, f'{dataset_name}.json')
+        json_file = os.path.join(data_folder, f'{dataset_name}.cprof.json')
         if os.path.exists(json_file):
             logger.info('Found stored json file, loading...')
             with open(json_file, 'r') as fp:
@@ -179,42 +176,6 @@ def main():
             logger.info('Dumping data into json file...')
             with open(json_file, 'w') as fp:
                 json.dump(data, fp)  
-    
-    
-    
-    # for algorithm in algorithms:
-    #     json_file = os.path.join(data_folder, f'{algorithm.__name__}.json')
-    #     if os.path.exists(json_file):
-    #         logger.info('Found stored json file, loading...')
-    #         with open(json_file, 'r') as fp:
-    #             data = json.load(fp)
-    #     else:
-    #         logger.info('No json file exists, running experiments...')
-    #         data = {}
-            
-    #         for dataset in process_datasets(results.datasets):
-    #             dataset_name, dataset_queries = dataset
-    #             print(dataset_name)
-    #             # print(dataset_queries)
-    #             data[dataset_name] = []
-    #             k = 500
-    #             eps = Fraction(1,1)
-    #             s1, s2, s3 = algorithm(dataset_queries, k, eps)
-    #             data[dataset_name].append([s1.getvalue(), s2.getvalue(), s3.getvalue()])
-            
-    #         logger.info('Dumping data into json file...')
-    #         with open(json_file, 'w') as fp:
-    #             json.dump(data, fp)   
-
 
 if __name__=='__main__':
     main()
-    # q = np.zeros(10000)
-    # k = 1000
-    # eps = Fraction(1,1)
-
-    # s1, s2, s3 = prof_noisy_top_k_secure_fast(q, k, eps)
-    
-    # print(f's1={s1.getvalue()}\n')
-    # print(f's2={s2.getvalue()}\n')
-    # print(f's3={s3.getvalue()}\n')
