@@ -152,18 +152,21 @@ def main():
             logger.info('No json file exists, running experiments...')
             print(dataset_name)
                 # print(dataset_queries)
-            k = 800
+            ks = [25, 50, 100, 200, 400, 800]
             eps_numerator, eps_denominator = 1, 1
-            num_iter = 1000
-            data = np.zeros(3)
-            for _ in range(num_iter):
-                t1, t2, t3 = prof_noisy_top_k_secure_fast(dataset_queries, k, eps_numerator, eps_denominator)
-                data = data + [t1, t2, t3]
-            # data.append([s1.getvalue(), s2.getvalue(), s3.getvalue()])
-            data = data / num_iter
+            num_iter = 100
+            data= {}
+            for k in ks:
+                prof_time = np.zeros(3)
+                for _ in range(num_iter):
+                    t1, t2, t3 = prof_noisy_top_k_secure_fast(dataset_queries, k, eps_numerator, eps_denominator)
+                    prof_time += [t1, t2, t3]
+                # data.append([s1.getvalue(), s2.getvalue(), s3.getvalue()])
+                prof_time /= num_iter
+                data[k] = prof_time.tolist()
             logger.info('Dumping data into json file...')
             with open(json_file, 'w') as fp:
-                json.dump(data.tolist(), fp)  
+                json.dump(data, fp)  
 
 if __name__=='__main__':
     main()
