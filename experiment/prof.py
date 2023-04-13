@@ -10,7 +10,6 @@ import numpy as np
 import shutil
 import re
 import time
-from fractions import Fraction
 from noisymax.primitive import geometric_exp
 
 
@@ -38,18 +37,21 @@ def process_datasets(folder):
             default_prng.shuffle(res)
             yield os.path.splitext(filename)[0], res
 
-def prof_noisy_top_k_secure_fast(q, k, eps, m=10, target_res=Fraction(1, 10)):
+def prof_noisy_top_k_secure_fast(q, k, eps_numerator, eps_denominator, m=10, res_numerator=1, res_denominator=10):
     '''
-    Similar to noisy_top_k_secure() but with early query elimination 
+    For timing the noisy_top_k_secure_fast algorithm
     '''
     q_len = len(q)
-    x = eps*target_res/(2*k)
-    res = target_res
+    # x = eps*target_res/(2*k)
+    # res = target_res
+    x_numerator = eps_numerator * res_numerator 
+    x_denominator = eps_denominator * res_denominator * 2 * k
+    res = res_numerator/res_denominator
+    curr_res = res
 
-    
     start = time.time()
-    noise = np.array([geometric_exp(x) for i in range(q_len)])
-    noisy_q = q + res*noise
+    noise = np.array([geometric_exp(x_numerator, x_denominator) for i in range(q_len)])
+    noisy_q = q + noise * curr_res
     orig_ind = np.arange(q_len)
     ind = np.argsort(noisy_q)[::-1]
     sorted_noisy_q = noisy_q[ind]
@@ -68,8 +70,8 @@ def prof_noisy_top_k_secure_fast(q, k, eps, m=10, target_res=Fraction(1, 10)):
     # loop to break ties
     while(tie):
         tie = False
-        res = res/m
-        x = x/m
+        curr_res /= m
+        x_denominator *= m
         # eliminate queries that are not among top k+2
         q_len = len(sorted_noisy_q)
         if q_len > k + 2:
@@ -80,8 +82,8 @@ def prof_noisy_top_k_secure_fast(q, k, eps, m=10, target_res=Fraction(1, 10)):
                     sorted_noisy_q = sorted_noisy_q[:i+1]
                     break
         # print("in loop 1: sorted_q={}, sorted_ind={}".format(sorted_noisy_q, sorted_orig_ind))
-        noise = np.array([geometric_exp(x) for i in range(len(sorted_noisy_q))])
-        sorted_noisy_q = sorted_noisy_q + res*(noise % m)
+        noise = np.array([geometric_exp(x_numerator, x_denominator) for i in range(len(sorted_noisy_q))])
+        sorted_noisy_q = sorted_noisy_q + (noise % m) * curr_res
         # print("Loop: t = {}, noisy_q = {}".format(t,noisy_q))
         ind = np.argsort(sorted_noisy_q)[::-1]
         sorted_orig_ind = sorted_orig_ind[ind]
@@ -95,7 +97,6 @@ def prof_noisy_top_k_secure_fast(q, k, eps, m=10, target_res=Fraction(1, 10)):
                 break
     end = time.time()
     t2 = end-start
-    
 
     start = time.time()
     # compute gaps
@@ -103,14 +104,16 @@ def prof_noisy_top_k_secure_fast(q, k, eps, m=10, target_res=Fraction(1, 10)):
     gap = []
     for i in range(k):
         if y[i] < y[i+1]:
-            gap.append(np.floor((sorted_noisy_q[i]-sorted_noisy_q[i+1]-res)/target_res)*target_res)
+            gap.append(np.floor((sorted_noisy_q[i]-sorted_noisy_q[i+1]-curr_res)/res)*res)
         else:
-            gap.append(np.floor((sorted_noisy_q[i]-sorted_noisy_q[i+1])/target_res)*target_res)
-    
+            gap.append(np.floor((sorted_noisy_q[i]-sorted_noisy_q[i+1])/res)*res)
     end = time.time()
     t3 = end - start
-    # return sorted_orig_ind[:k], gap
+
+    #return sorted_orig_ind[:k], gap
     return t1, t2, t3
+
+
 
 def main():
     algorithms = (
@@ -150,11 +153,11 @@ def main():
             print(dataset_name)
                 # print(dataset_queries)
             k = 800
-            eps = Fraction(1,1)
-            num_iter = 1000
+            eps_numerator, eps_denominator = 1, 1
+            num_iter = 10
             data = np.zeros(3)
             for _ in range(num_iter):
-                t1, t2, t3 = prof_noisy_top_k_secure_fast(dataset_queries, k, eps)
+                t1, t2, t3 = prof_noisy_top_k_secure_fast(dataset_queries, k, eps_numerator, eps_denominator)
                 data = data + [t1, t2, t3]
             # data.append([s1.getvalue(), s2.getvalue(), s3.getvalue()])
             data = data / num_iter

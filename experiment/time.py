@@ -10,7 +10,7 @@ import shutil
 import re
 import coloredlogs
 import time
-from fractions import Fraction
+# from fractions import Fraction
 from noisymax.algorithm import noisy_top_k, noisy_top_k_secure, noisy_top_k_secure_fast
 
 
@@ -74,8 +74,8 @@ def main():
         else:
             logger.info('No json file exists, running experiments...')
             ks = [25, 50, 100, 200, 400, 800]
-            eps=Fraction(1,1)
-            num_iter = 100
+            eps_numerator, eps_denominator = 1, 1
+            num_iter = 10
             data = {}
             
             for dataset in process_datasets(results.datasets):
@@ -91,7 +91,7 @@ def main():
                 for k in ks:
                     start = time.time()
                     for _ in range(num_iter):
-                        ind, gap = algorithm(dataset_queries, k, eps)
+                        ind, gap = algorithm(dataset_queries, k, eps_numerator, eps_denominator)
                     end = time.time()
                     data[dataset_name].append([k,(end-start)/num_iter])
             

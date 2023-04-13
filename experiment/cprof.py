@@ -167,13 +167,11 @@ def main():
             print(dataset_name)
                 # print(dataset_queries)
             k = 800
-            eps = Fraction(1,1)
+            eps_numerator, eps_denominator = 1, 1
             
             pr = cProfile.Profile()
             pr.enable()
-            _, _ = noisy_top_k_secure_fast(dataset_queries, k, eps)
-
-            
+            _, _ = noisy_top_k_secure_fast(dataset_queries, k, eps_numerator, eps_denominator)           
             pr.disable()
             s = io.StringIO()
             sortby = SortKey.CUMULATIVE
