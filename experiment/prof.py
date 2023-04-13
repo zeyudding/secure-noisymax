@@ -154,7 +154,7 @@ def main():
                 # print(dataset_queries)
             k = 800
             eps_numerator, eps_denominator = 1, 1
-            num_iter = 10
+            num_iter = 1000
             data = np.zeros(3)
             for _ in range(num_iter):
                 t1, t2, t3 = prof_noisy_top_k_secure_fast(dataset_queries, k, eps_numerator, eps_denominator)

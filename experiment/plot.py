@@ -20,7 +20,7 @@ def main():
             data = json.load(fp)
             print(data)
 
-            # the following numbers are excerpted from data
+            # the following numbers are excerpted from kosarak.cprof.json
 
             ncalls_geometric = 43676
             ncalls_bernoulli = 306006

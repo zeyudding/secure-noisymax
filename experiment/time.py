@@ -5,10 +5,10 @@ import difflib
 import logging
 import json
 import numpy as np
-import matplotlib
+# import matplotlib
 import shutil
 import re
-import coloredlogs
+# import coloredlogs
 import time
 # from fractions import Fraction
 from noisymax.algorithm import noisy_top_k, noisy_top_k_secure, noisy_top_k_secure_fast
@@ -75,7 +75,7 @@ def main():
             logger.info('No json file exists, running experiments...')
             ks = [25, 50, 100, 200, 400, 800]
             eps_numerator, eps_denominator = 1, 1
-            num_iter = 10
+            num_iter = 1000
             data = {}
             
             for dataset in process_datasets(results.datasets):
