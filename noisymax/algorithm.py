@@ -10,7 +10,7 @@ def noisy_top_k(q, k, eps_numerator, eps_denominator):
         Parameters:
             q (np.ndarray): a list of queries
             k (int): number of queries to be returned
-            eps (float): privacy budget
+            eps = eps_numerator/eps_denominator: privacy budget
         Returns:
             ind (List[int]): the indices of top-k queries
             gap (List[int]): the gaps between top-(k+1) queries 

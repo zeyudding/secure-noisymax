@@ -28,10 +28,9 @@ def main():
             t_geometric = 0.100 + 0.020 # geometric_exp + geometric_exp1
             t_bernoulli = 0.071 + 0.236 + 0.184 # bernoulli-exp + bernoulli_exp1 + bernoulli
             t_uniform = 0.904
-            t_fractions = 0.667 + 0.167 + 0.117 + 0.523 + 0.267 
-            + 0.107 + 0.152 + 0.151 + 0.012 + 0.028 + 0.023 + 0.001
 
-            print(t_geometric, t_bernoulli, t_uniform, t_fractions)
+
+            print(t_geometric, t_bernoulli, t_uniform)
             # s1 = float(data['s1'].split()[7])
             # s2 = float(data['s2'].split()[4])
             # s3 = float(data['s3'].split()[4])
